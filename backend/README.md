@@ -83,17 +83,20 @@ GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
+```
 {'1' : "Science",
 '2' : "Art",
 '3' : "Geography",
 '4' : "History",
 '5' : "Entertainment",
 '6' : "Sports"}
+```
 
 GET '/questions'
 - Returns a list of questions, number of total questions, current category, categories. 
 - Request Arguments: None
 - Returns:
+```
     {
         "categories": {
             "1": "Science",
@@ -123,11 +126,13 @@ GET '/questions'
         "success": true,
         "total_questions": 
     }
+```
 
 POST '/questions'
 - Submits a new question to the database 
 - Request Arguments: Question, answer, category, difficulty
 - returns:
+```
     {
         "questions": {
         "question": "What color is the sky?",
@@ -138,20 +143,23 @@ POST '/questions'
         "status": 200,
         "success": true
     }
-
+```
 
 DELETE '/questions/<int:question_id>'
 - Deletes a question
 - Returns: Success with status code of 200 when successfully deleted. If not, 404 or 422 when not successful
 - Parameters: <int:question_id>
+```
     {
         "success": true
     }
+```
 
 POST '/questions/search'
 - Returns any questions for whom the search term is a substring of the question. 
 - Returns: Questions, total quesitons, and current category. Successful code 200 and 404 when not 
 - Request Argument: Takes searchTerm
+```
     {
         "searchTerm": "Maui"
     }
@@ -179,11 +187,13 @@ POST '/questions/search'
         "success": true,
         "total_questions": 1     
     }
+```
 
 GET '/categories/<int:category_id>/questions'
 - Returns questions based on category
 - Parameter: <int:category_id>
 - Returns:
+```
     {
         
     "categories": {
@@ -228,12 +238,14 @@ GET '/categories/<int:category_id>/questions'
     "success: true,
     "total_questions": 4
     }
+```
 
 POST '/quizzes'
 - Allows for the quiz to be played
 - Returns: Success status code 200, quesitons. If unsuccessful, will throw a 500 error
 - Parameters: * category_id
               * previous_questions
+```
     {
         "categories": {
         "1": "Science",
@@ -251,8 +263,9 @@ POST '/quizzes'
         "question": "Which is the only team to play in every soccer World Cup tournament?"
     },
     "success": true
-
 ```
+
+
 ##Errors
 
 #Not Found: 404
