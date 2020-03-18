@@ -11,6 +11,22 @@ Follow instructions to install the latest version of python for your platform in
 #### Virtual Enviornment
 
 We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+```bash
+py -m pip --version
+py -m pip install --upgrade pip
+or
+py -m pip install --user virtualenv
+```
+Create virtual env by:
+```bash
+py -m venv env
+```
+Activate env by:
+```bash
+cd into env folder
+cd into Scripts
+. activate 
+```
 
 #### PIP Dependencies
 
@@ -33,6 +49,8 @@ This will install all of the required packages we selected within the `requireme
 ## Database Setup
 With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
 ```bash
+psql -U postgres
+create database trivia
 psql trivia < trivia.psql
 ```
 
@@ -52,29 +70,14 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
-## Tasks
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
 Endpoints
 GET '/categories'
-GET ...
-POST ...
-DELETE ...
+GET '/questions'
+POST '/questions'
+DELETE '/questions/<int:question_id>'
+POST '/questions/search'
+GET '/categories/<int:category_id>/questions'
+POST '/quizzes'
 
 GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
@@ -87,8 +90,195 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-```
+GET '/questions'
+- Returns a list of questions, number of total questions, current category, categories. 
+- Request Arguments: None
+- Returns:
+    {
+        "categories": {
+            "1": "Science",
+            "2": "Art",
+            "3": "Geography",
+            "4": "History",
+            "5": "Entertainment",
+            "6": "Sports
+        },
+        "current_category": null,
+        "questions": [
+            {
+                "answer": "Apollo 13",
+                "category": 5,
+                "difficulty": 4,
+                "id": 2,
+                "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+            },
+            {
+                "answer": "Muhammad Ali",
+                "category": 4,
+                "difficulty": 1,
+                "id": 9,
+                "question": "What boxer's original name is Cassius Clay?"
+            }
+        ], 
+        "success": true,
+        "total_questions": 
+    }
 
+POST '/questions'
+- Submits a new question to the database 
+- Request Arguments: Question, answer, category, difficulty
+- returns:
+    {
+        "questions": {
+        "question": "What color is the sky?",
+        "answer": "Blue",
+        "difficulty": 1,
+        "category": 1
+        },
+        "status": 200,
+        "success": true
+    }
+
+
+DELETE '/questions/<int:question_id>'
+- Deletes a question
+- Returns: Success with status code of 200 when successfully deleted. If not, 404 or 422 when not successful
+- Parameters: <int:question_id>
+    {
+        "success": true
+    }
+
+POST '/questions/search'
+- Returns any questions for whom the search term is a substring of the question. 
+- Returns: Questions, total quesitons, and current category. Successful code 200 and 404 when not 
+- Request Argument: Takes searchTerm
+    {
+        "searchTerm": "Maui"
+    }
+    {
+        "categories": {
+            "1": "Science",
+            "2": "Art",
+            "3": "Geography",
+            "4": "History",
+            "5": "Entertainment",
+            "6": "Sports"
+        },
+    }
+    {
+        "current_category": null,
+        "questions" : [
+            {
+                "answer": "Yes",
+                "category": 3,
+                "difficulty": 1,
+                "id": 26,
+                "question": "Is Maui in Hawaii?"
+            }
+        ],
+        "success": true,
+        "total_questions": 1     
+    }
+
+GET '/categories/<int:category_id>/questions'
+- Returns questions based on category
+- Parameter: <int:category_id>
+- Returns:
+    {
+        
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "current_category": "Art",
+    "questions": [
+        {
+            "answer": "Escher",
+            "category": 2,
+            "difficulty": 1,
+            "id": 16,
+            "question": "Which Dutch graphic artist–initials M C was a creator of optical illusions?"
+        },
+        {
+            "answer": "Mona Lisa",
+            "category": 2,
+            "difficulty": 3,
+            "id": 17,
+            "question": "La Giaconda is better known as what?"
+        },
+        {
+            "answer": "One",
+            "category": 2,
+            "difficulty": 4,
+            "id": 18,
+            "question": "How many paintings did Van Gogh sell in his lifetime?"
+        },
+        {
+            "answer": "Jackson Pollock",
+            "category": 2,
+            "difficulty": 2,
+            "id": 19,
+            "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+        },
+    ],
+    "success: true,
+    "total_questions": 4
+    }
+
+POST '/quizzes'
+- Allows for the quiz to be played
+- Returns: Success status code 200, quesitons. If unsuccessful, will throw a 500 error
+- Parameters: * category_id
+              * previous_questions
+    {
+        "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "questions": {
+        "answer": "Brazil",
+        "category": 6,
+        "difficulty": 3,
+        "id": 10,
+        "question": "Which is the only team to play in every soccer World Cup tournament?"
+    },
+    "success": true
+
+```
+##Errors
+
+#Not Found: 404
+```
+    "success": False,
+    "error": 404,
+    "message": "Not found"
+```
+#Bad Request: 405
+```
+    "success": False,
+    "error": 405,
+    "message": "bad request" 
+```
+#Unproccessable: 422
+```
+    "success": False,
+    "error": 422,
+    "message": "Unprocessable"
+```
+#Internal Error: 500
+```
+    "success": False,
+    "error": 500,
+    "message": "Internal Error"
+```
 
 ## Testing
 To run the tests, run

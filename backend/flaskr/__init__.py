@@ -129,45 +129,23 @@ def create_app(test_config=None):
   # the form will clear and the question will appear at the end of the last page
   # of the questions list in the "List" tab.  
 
-  # @app.route('/questions/search', methods=['POST'])
-  # def search():
-  #   body = request.get_json()
-  #   search_term = body.get('searchTerm', '')
+  @app.route('/questions/search', methods=['POST'])
+  def search():
+    body = request.get_json()
+    search_term = body.get('searchTerm', None)
 
-  #   if search_term == '':
-  #     abort(422)
+    if search_term:
+      questions = Question.query.filter(Question.question.ilike('%{search_term}%')).all()
+      current_questions = pagination_questions(request, questions)
 
-  #   try:
-  #     questions = Question.query.filter(Question.question.ilike(f'%{search_term}%'))
+      return jsonify({
+        'success': True,
+        'questions': current_questions, #[question.format() for question in questions],
+        'total_quesitons': len(questions),
+        'current_category': None
+      })
+    abort(404)
 
-  #     if len(questions) == 0:
-  #       abort(404)
-
-  #     pagination_questions = get_paginated_questions(request, questions, QUESTIONS_PER_PAGE)
-
-  #     return jsonify({
-  #       'success': True,
-  #       'questions': pagination_questions,
-  #       'total_quesitons': len(Question.query.all())
-  #     }), 200
-
-  #   except:
-  #     abort(404)
-    # body = request.get_json()
-    # search_term = body.get('searchTerm', None)
-
-    # if search_term:
-    #   search_results = Question.query.filter(Question.question.ilike('%{search_term}%')).all()
-
-    #   return jsonify({
-    #     'success': True,
-    #     'questions': [question.format() for question in search_results],
-    #     'total_quesitons': len(search_results),
-    #     'current_category': None
-    #   })
-    # abort(404)
-
-  # @TODO: 
   # Create a POST endpoint to get questions based on a search term. 
   # It should return any questions for whom the search term is a substring of the question. 
   # TEST: Search by any phrase. The questions list will update to include only question that include that string within their question. 
